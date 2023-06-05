@@ -67,3 +67,68 @@
 //     message: userId,
 //   });
 // });
+
+import { User } from "../Models/User.js";
+import ErrorHandler from "../Utils/errorHandler.js";
+import { sendToken } from "../Utils/sendToken.js";
+import { catchAssyncError } from "../Middlewares/catchAsyncError.js";
+
+export const register = catchAssyncError(async (req, res, next) => {
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    return next(new ErrorHandler("Please enter all fields", 400));
+  }
+  let user = await User.findOne({ email });
+  if (user) {
+    return next(
+      new ErrorHandler("User already exist with this email address", 409)
+    );
+  }
+  user = await User.create({
+    name,
+    email,
+    password,
+    avatar: {
+      public_id: "tempId",
+      url: "tempUrl",
+    },
+  });
+  sendToken(res, user, "Registered successfully", 201);
+});
+
+export const login = catchAssyncError(async (req, res, next) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return next(new ErrorHandler("Please enter all fields", 400));
+  }
+  let user = await User.findOne({ email }).select("+password");
+  if (!user) {
+    return next(new ErrorHandler("Incorrect email or password", 401));
+  }
+  const isMatch = await user.comparePassword(password);
+  if (!isMatch) {
+    return next(new ErrorHandler("Incorrect email or password", 401));
+  }
+  sendToken(res, user, `Welcome back ${user.name}`, 200);
+});
+
+export const logout = catchAssyncError(async (req, res, next) => {
+  res
+    .status(200)
+    .cookie("token", null, {
+      expires: new Date(Date.now()),
+      httpOnly: true,
+    })
+    .json({
+      success: true,
+      message: "Logged Out Successfully!",
+    });
+});
+
+export const getMyProfile = catchAssyncError(async (req, res, next) => {
+  const user = req.user;
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});

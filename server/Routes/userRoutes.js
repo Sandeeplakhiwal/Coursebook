@@ -32,3 +32,28 @@
 // // Remove from playlist
 
 // export default router;
+
+import express from "express";
+import {
+  getMyProfile,
+  login,
+  logout,
+  register,
+} from "../Controllers/userController.js";
+import { isAuthenticated } from "../Middlewares/auth.js";
+
+const router = express.Router();
+
+/* REGISTER A NEW USER */
+router.post("/register", register);
+
+/* LOGIN */
+router.post("/login", login);
+
+/* LOGOUT */
+router.get("/logout", isAuthenticated, logout);
+
+/* GET MY PROFILE */
+router.get("/me", isAuthenticated, getMyProfile);
+
+export default router;

@@ -33,25 +33,34 @@
 import express from "express";
 import { config } from "dotenv";
 import ErrorMiddleware from "./Middlewares/Error.js";
+import cookieParser from "cookie-parser";
+
+// Importing Routes
+import course from "./Routes/courseRoutes.js";
+import user from "./Routes/userRoutes.js";
+
+const app = express();
 
 config({
   path: "./Config/Config.env",
 });
 
-const app = express();
-
-app.get("/", (req, res) => {
-  res.send("<h1>Coursebook Official Server</h1>");
-});
-
 // Using Middlewares
 app.use(express.json());
-
-// Importing Routes
-import course from "./Routes/courseRoutes.js";
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+app.use(cookieParser());
 
 // Using Routes
 app.use("/api/v1", course);
+app.use("/api/v1", user);
+
+app.get("/", (req, res) => {
+  res.send("Coursebook official server.");
+});
 
 export default app;
 
