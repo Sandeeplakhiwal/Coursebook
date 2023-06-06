@@ -1,27 +1,3 @@
-// import express from "express";
-// import {
-//   getMyProfile,
-//   login,
-//   logout,
-//   register,
-// } from "../Controllers/userController.js";
-// import { isAuthenticated } from "../Middlewares/auth.js";
-
-// const router = express.Router();
-
-// // To register a new user
-// router.post("/register", register);
-
-// // Login
-// router.post("/login", login);
-
-// // Logout
-// router.get("/logout", logout);
-
-// // Get my profile
-// router.get("/me", getMyProfile);
-
-// // Change Password
 // // Update Profile
 // // Update Profile Picture
 
@@ -35,10 +11,13 @@
 
 import express from "express";
 import {
+  changePassword,
   getMyProfile,
   login,
   logout,
   register,
+  updateProfile,
+  updateProfilePic,
 } from "../Controllers/userController.js";
 import { isAuthenticated } from "../Middlewares/auth.js";
 
@@ -55,5 +34,14 @@ router.get("/logout", isAuthenticated, logout);
 
 /* GET MY PROFILE */
 router.get("/me", isAuthenticated, getMyProfile);
+
+/* CHANGE PASSWORD */
+router.put("/changepassword", isAuthenticated, changePassword);
+
+/* UPDATE PROFILE */
+router.put("/updateprofile", isAuthenticated, updateProfile);
+
+/* UPDATE PROFILE PIC */
+router.put("/updateprofilepic", isAuthenticated, updateProfilePic);
 
 export default router;

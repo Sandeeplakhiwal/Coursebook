@@ -132,3 +132,56 @@ export const getMyProfile = catchAssyncError(async (req, res, next) => {
     user,
   });
 });
+
+export const changePassword = catchAssyncError(async (req, res, next) => {
+  const { oldPassword, newPassword } = req.body;
+  if (!oldPassword || !newPassword)
+    return next(new ErrorHandler("Please enter all fields!", 401));
+  let user = await User.findById(req.user._id).select("+password");
+  const isMatch = await user.comparePassword(oldPassword);
+  if (!isMatch) {
+    return next(new ErrorHandler("Incorrect old password!", 401));
+  }
+  user.password = newPassword;
+  user.save();
+  res.status(201).json({
+    success: true,
+    message: "Password Changed Successsfully.",
+  });
+});
+
+export const updateProfile = catchAssyncError(async (req, res, next) => {
+  const { name, email } = req.body;
+  if (!name && !email)
+    return next(
+      new ErrorHandler("Please enter a field if you want to update one!")
+    );
+  let user = await User.findById(req.user._id);
+
+  if (name) user.name = name;
+  if (email) user.email = email;
+
+  user.save();
+  res.status(201).json({
+    success: true,
+    message: "Profile Updated Successsfully.",
+  });
+});
+
+export const updateProfilePic = catchAssyncError(async (req, res, next) => {
+  const { name, email } = req.body;
+  if (!name && !email)
+    return next(
+      new ErrorHandler("Please enter a field if you want to update one!")
+    );
+  let user = await User.findById(req.user._id);
+
+  if (name) user.name = name;
+  if (email) user.email = email;
+
+  user.save();
+  res.status(201).json({
+    success: true,
+    message: "Profile Updated Successsfully.",
+  });
+});
