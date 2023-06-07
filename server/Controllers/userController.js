@@ -72,6 +72,8 @@ import { User } from "../Models/User.js";
 import ErrorHandler from "../Utils/errorHandler.js";
 import { sendToken } from "../Utils/sendToken.js";
 import { catchAssyncError } from "../Middlewares/catchAsyncError.js";
+import { sendEmail } from "../Utils/sendEmail.js";
+import crypto from "crypto";
 
 export const register = catchAssyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -183,5 +185,42 @@ export const updateProfilePic = catchAssyncError(async (req, res, next) => {
   res.status(201).json({
     success: true,
     message: "Profile Updated Successsfully.",
+  });
+});
+export const forgotPassword = catchAssyncError(async (req, res, next) => {
+  const { email } = req.body;
+  if (!email)
+    return next(new ErrorHandler("Please enter your email password."), 401);
+  const user = await User.findOne({ email });
+  const resetToken = await user.getResetToken(user);
+  // Send token via email
+  const link = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
+  const text = `Click on the link to reset password: ${link}. Ignore if you did not requested.`;
+  await sendEmail(user.email, "Coursebook Reset Password Token", text);
+  res.status(200).json({
+    success: true,
+    message: `Reset token has sent to ${user.email}`,
+  });
+});
+
+export const resetPassword = catchAssyncError(async (req, res, next) => {
+  const { token } = req.params;
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: { $gt: Date.now() },
+  });
+  if (!user)
+    return next(new ErrorHandler("Token is invalid or has expired!", 409));
+  user.password = req.body.password;
+  user.resetPasswordExpire = undefined;
+  user.resetPasswordToken = undefined;
+  await user.save();
+  res.status(200).json({
+    success: true,
+    message: "Password changed successfully.",
   });
 });

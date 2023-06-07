@@ -1,6 +1,3 @@
-// // Update Profile
-// // Update Profile Picture
-
 // // Forget Password
 // // Reset Password
 
@@ -12,10 +9,12 @@
 import express from "express";
 import {
   changePassword,
+  forgotPassword,
   getMyProfile,
   login,
   logout,
   register,
+  resetPassword,
   updateProfile,
   updateProfilePic,
 } from "../Controllers/userController.js";
@@ -43,5 +42,11 @@ router.put("/updateprofile", isAuthenticated, updateProfile);
 
 /* UPDATE PROFILE PIC */
 router.put("/updateprofilepic", isAuthenticated, updateProfilePic);
+
+/* FORGOT PASSWORD */
+router.post("/forgetpassword", forgotPassword);
+
+/* RESET PASSWORD */
+router.put("/resetpassword/:token", resetPassword);
 
 export default router;
