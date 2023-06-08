@@ -8,12 +8,14 @@
 
 import express from "express";
 import {
+  addToPlaylist,
   changePassword,
   forgotPassword,
   getMyProfile,
   login,
   logout,
   register,
+  removeFromPlaylist,
   resetPassword,
   updateProfile,
   updateProfilePic,
@@ -48,5 +50,11 @@ router.post("/forgetpassword", forgotPassword);
 
 /* RESET PASSWORD */
 router.put("/resetpassword/:token", resetPassword);
+
+/* ADD TO PLAYLIST */
+router.post("/addtoplaylist", isAuthenticated, addToPlaylist);
+
+/* REMOVE FROM PLAYLIST */
+router.delete("/removefromplaylist", isAuthenticated, removeFromPlaylist);
 
 export default router;
