@@ -2,16 +2,13 @@ import { catchAssyncError } from "../Middlewares/catchAsyncError.js";
 import { Course } from "../Models/Course.js";
 import getDataUri from "../Utils/dataURI.js";
 import cloudinary from "cloudinary";
+import ErrorHandler from "../Utils/errorHandler.js";
 
 export const createCourse = catchAssyncError(async (req, res, next) => {
   const { title, description, category, createdBy } = req.body;
 
-  if (!title || !description || !category || !createdBy) {
-    res.json({
-      success: false,
-      error: "Please enter all fields.",
-    });
-  }
+  if (!title || !description || !category || !createdBy)
+    return next(new ErrorHandler("Please fill all the fields!", 400));
   const file = req.file;
   // console.log(file);
   const fileUri = getDataUri(file);
@@ -36,7 +33,7 @@ export const createCourse = catchAssyncError(async (req, res, next) => {
     },
   });
 
-  res.status(200).json({
+  res.status(201).json({
     success: true,
     message: "Course created successfully.",
   });
@@ -44,11 +41,7 @@ export const createCourse = catchAssyncError(async (req, res, next) => {
 
 export const getAllCourses = catchAssyncError(async (req, res, next) => {
   const courses = await Course.find({}).select("-lectures");
-  if (!courses)
-    return res.status(200).json({
-      success: true,
-      message: "No Courses Yet!",
-    });
+  if (!courses) return next(new ErrorHandler("No Courses Yet!"), 404);
   res.status(200).json({
     success: true,
     courses,
@@ -56,7 +49,6 @@ export const getAllCourses = catchAssyncError(async (req, res, next) => {
 });
 
 export const getCourseLectures = catchAssyncError(async (req, res, next) => {
-  // const user = await User.findById(req.user._id);
   const course = await Course.findById(req.params.id);
   if (!course) return next(new ErrorHandler("Course not found!", 404));
   course.views += 1;
@@ -66,28 +58,60 @@ export const getCourseLectures = catchAssyncError(async (req, res, next) => {
     lectures: course.lectures,
   });
 });
+
+// Max Video Size: 100mb
 export const addLecture = catchAssyncError(async (req, res, next) => {
   const { id } = req.params;
   const { title, description } = req.body;
 
-  // const file = req.file; (using multer)
+  const file = req.file;
+  const fileUri = getDataUri(file);
+
+  if (!title || !description || !file || !id)
+    return next(new ErrorHandler("Please fill all fields!", 400));
 
   const course = await Course.findById(id);
   if (!course) return next(new ErrorHandler("Course not found!", 404));
-  // upload lecture on cloundiary
+
+  const mycloud = await cloudinary.v2.uploader.upload(fileUri.content, {
+    resource_type: "video",
+  });
   course.lectures.push({
     title,
     description,
     video: {
-      public_id: "url",
-      url: "url",
+      public_id: mycloud.public_id,
+      url: mycloud.secure_url,
     },
   });
 
   course.numOfVideos = course.lectures.length;
   await course.save();
-  res.status(200).json({
+  res.status(201).json({
     success: true,
     message: "Lecture added in Course",
+  });
+});
+
+export const deleteCourse = catchAssyncError(async (req, res, next) => {
+  const { id } = req.params;
+
+  if (!id) return next(new ErrorHandler("Can't get course id!", 400));
+
+  const course = await Course.findById(id);
+  if (!course) return next(new ErrorHandler("Course not found", 404));
+
+  await cloudinary.v2.uploader.destroy(course.poster.public_id);
+
+  for (let i = 0; i < course.lectures.length; i++) {
+    const singleLecture = course.lectures[i];
+    await cloudinary.v2.uploader.destroy(singleLecture.video.public_id);
+  }
+
+  await Course.deleteOne(course);
+
+  res.status(200).json({
+    success: true,
+    message: "Course deleted successfully.",
   });
 });

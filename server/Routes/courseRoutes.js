@@ -7,6 +7,7 @@ import express from "express";
 import {
   addLecture,
   createCourse,
+  deleteCourse,
   getAllCourses,
   getCourseLectures,
 } from "../Controllers/courseController.js";
@@ -28,8 +29,18 @@ router.post(
 router.get("/courses", getAllCourses);
 
 // Get All Lectures Of The Course
-router
-  .get("/course/:id", isAuthenticated, getCourseLectures)
-  .post(isAuthenticated, authoriseAdmin, singleUpload, addLecture);
+router.get("/course/:id", isAuthenticated, getCourseLectures);
+
+// Create A New Lecture In The Course
+router.post(
+  "/course/:id",
+  isAuthenticated,
+  authoriseAdmin,
+  singleUpload,
+  addLecture
+);
+
+// Create A New Lecture In The Course
+router.delete("/course/:id", isAuthenticated, authoriseAdmin, deleteCourse);
 
 export default router;
