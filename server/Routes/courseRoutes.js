@@ -8,6 +8,7 @@ import {
   addLecture,
   createCourse,
   deleteCourse,
+  deleteLecture,
   getAllCourses,
   getCourseLectures,
 } from "../Controllers/courseController.js";
@@ -40,7 +41,10 @@ router.post(
   addLecture
 );
 
-// Create A New Lecture In The Course
+// Delete A Course
 router.delete("/course/:id", isAuthenticated, authoriseAdmin, deleteCourse);
+
+// Delete A Lecture Of Course
+router.delete("/lecture", isAuthenticated, authoriseAdmin, deleteLecture);
 
 export default router;
