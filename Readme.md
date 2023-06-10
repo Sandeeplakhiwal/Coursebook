@@ -40,18 +40,18 @@ git clone https://github.com/Sandeeplakhiwal/coursebook.git
 ## Usage
 
 - Register a new user account
-  ![Register](./frontend/src/assets/images/screenshots/registrationscs.jpeg)
+  ![Register](https://res.cloudinary.com/dkqp81ehr/image/upload/v1686394842/registrationscs_khqx8p.jpg)
 
 - Log in with your credentials
-  ![Login](./frontend/src/assets/images/screenshots/loginscs.jpeg)
+  ![Login](https://res.cloudinary.com/dkqp81ehr/image/upload/v1686394819/loginscs_bryijk.jpg)
 - Purshase premium subscription to access courses available on this app
 
 - Select an course you are interested in
-  ![Courses](./frontend/src/assets/images/screenshots/courses.jpeg)
+  ![Courses](https://res.cloudinary.com/dkqp81ehr/image/upload/v1686394757/courses_wzjkuu.jpg)
 - Click watch now and enjoy the learning.
 
 - You can request a new course according to your preference
-  ![RequestCourse](./frontend/src/assets/images/screenshots/requestcoursescs.jpeg)
+  ![RequestCourse](https://res.cloudinary.com/dkqp81ehr/image/upload/v1686394859/requestcoursescs_z4ptxc.jpg)
 
 ## API Routes
 
