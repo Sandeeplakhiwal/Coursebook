@@ -5,10 +5,11 @@ import { sendToken } from "../Utils/sendToken.js";
 import { catchAssyncError } from "../Middlewares/catchAsyncError.js";
 import { sendEmail } from "../Utils/sendEmail.js";
 import crypto from "crypto";
+import getDataUri from "../Utils/dataURI.js";
+import cloudinary from "cloudinary";
 
 export const register = catchAssyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
-  // const file = req.file;
   if (!name || !email || !password) {
     return next(new ErrorHandler("Please enter all fields", 400));
   }
@@ -19,13 +20,16 @@ export const register = catchAssyncError(async (req, res, next) => {
     );
   }
   //   Upload file on cloudinary
+  const file = req.file;
+  const fileURI = getDataUri(file);
+  const myCloud = await cloudinary.v2.uploader.upload(fileURI.content);
   user = await User.create({
     name,
     email,
     password,
     avatar: {
-      public_id: "tempId",
-      url: "tempUrl",
+      public_id: myCloud.public_id,
+      url: myCloud.secure_url,
     },
   });
   sendToken(res, user, "Registered successfully", 201);
@@ -104,20 +108,25 @@ export const updateProfile = catchAssyncError(async (req, res, next) => {
 });
 
 export const updateProfilePic = catchAssyncError(async (req, res, next) => {
-  const { name, email } = req.body;
-  if (!name && !email)
-    return next(
-      new ErrorHandler("Please enter a field if you want to update one!")
-    );
+  const file = req.file;
+  if (!file)
+    return next(new ErrorHandler("Please Select A File To Update Profile Pic"));
   let user = await User.findById(req.user._id);
 
-  if (name) user.name = name;
-  if (email) user.email = email;
+  const fileURI = getDataUri(file);
+  const myCloud = await cloudinary.v2.uploader.upload(fileURI.content);
+
+  await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+
+  user.avatar = {
+    public_id: myCloud.public_id,
+    url: myCloud.secure_url,
+  };
 
   user.save();
   res.status(201).json({
     success: true,
-    message: "Profile Updated Successsfully.",
+    message: "Profile Picture Updated Successsfully.",
   });
 });
 export const forgotPassword = catchAssyncError(async (req, res, next) => {
@@ -195,5 +204,38 @@ export const removeFromPlaylist = catchAssyncError(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Removed from playlist",
+  });
+});
+
+/* Admin Controllers */
+
+// Get All Users
+export const getAllUsers = catchAssyncError(async (req, res, next) => {
+  const users = await User.find({});
+  const numberOfUsers = users.length;
+  res.status(200).json({
+    success: true,
+    numberOfUsers,
+    users,
+  });
+});
+
+// Update User Role From User To Admin or Admin To User
+export const updateUserRole = catchAssyncError(async (req, res, next) => {
+  const { id } = req.params;
+  const user = await User.findById(id);
+  if (!user) return next(new ErrorHandler("User not found"), 404);
+
+  if (user.role === "user") {
+    user.role = "admin";
+  } else {
+    user.role = "user";
+  }
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: `${user.name}'s role has updated as ${user.role}.`,
   });
 });
