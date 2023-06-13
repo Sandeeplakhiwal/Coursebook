@@ -10,6 +10,8 @@ import express from "express";
 import {
   addToPlaylist,
   changePassword,
+  deleteMyProfile,
+  deleteUserProfile,
   forgotPassword,
   getAllUsers,
   getMyProfile,
@@ -65,6 +67,9 @@ router.post("/addtoplaylist", isAuthenticated, addToPlaylist);
 /* REMOVE FROM PLAYLIST */
 router.delete("/removefromplaylist", isAuthenticated, removeFromPlaylist);
 
+/* DELETE MY PROFILE */
+router.delete("/deletemyprofile", isAuthenticated, deleteMyProfile);
+
 /* *** ADMIN ROUTES *** */
 
 /* GET ALL USERS */
@@ -76,6 +81,14 @@ router.put(
   isAuthenticated,
   authoriseAdmin,
   updateUserRole
+);
+
+/* UPDATE USER PROFILE */
+router.delete(
+  "/admin/deleteuser/:id",
+  isAuthenticated,
+  authoriseAdmin,
+  deleteUserProfile
 );
 
 export default router;

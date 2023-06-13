@@ -207,6 +207,27 @@ export const removeFromPlaylist = catchAssyncError(async (req, res, next) => {
   });
 });
 
+export const deleteMyProfile = catchAssyncError(async (req, res, next) => {
+  const user = req.user;
+  if (!user) return next(new ErrorHandler("User not found"), 404);
+
+  await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+
+  // Cancel subscription
+
+  await User.deleteOne(user);
+
+  res
+    .status(200)
+    .cookie("token", null, {
+      expires: new Date(Date.now()),
+    })
+    .json({
+      success: true,
+      message: `${user.name} your profile has deleted successfully.`,
+    });
+});
+
 /* Admin Controllers */
 
 // Get All Users
@@ -237,5 +258,23 @@ export const updateUserRole = catchAssyncError(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: `${user.name}'s role has updated as ${user.role}.`,
+  });
+});
+
+// Delete User Profile
+export const deleteUserProfile = catchAssyncError(async (req, res, next) => {
+  const { id } = req.params;
+  const user = await User.findById(id);
+  if (!user) return next(new ErrorHandler("User not found"), 404);
+
+  await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+
+  // Cancel subscription
+
+  await User.deleteOne(user);
+
+  res.status(200).json({
+    success: true,
+    message: `${user.name} deleted successfully.`,
   });
 });

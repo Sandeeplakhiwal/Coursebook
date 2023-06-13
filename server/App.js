@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 // Importing Routes
 import course from "./Routes/courseRoutes.js";
 import user from "./Routes/userRoutes.js";
+import payment from "./Routes/paymentRoutes.js";
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(cookieParser());
 // Using Routes
 app.use("/api/v1", course);
 app.use("/api/v1", user);
+app.use("/api/v1", payment);
 
 app.get("/", (req, res) => {
   res.send("Coursebook official server.");
