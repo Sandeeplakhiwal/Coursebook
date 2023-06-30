@@ -7,6 +7,7 @@ import { sendEmail } from "../Utils/sendEmail.js";
 import crypto from "crypto";
 import getDataUri from "../Utils/dataURI.js";
 import cloudinary from "cloudinary";
+import { Stats } from "../Models/Stats.js";
 
 export const register = catchAssyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -277,4 +278,15 @@ export const deleteUserProfile = catchAssyncError(async (req, res, next) => {
     success: true,
     message: `${user.name} deleted successfully.`,
   });
+});
+
+User.watch().on("change", async () => {
+  const stats = await Stats.find({}).sort({ createdAt: "desc" }).limit(1);
+  const subscription = await User.find({ "subscription.status": "created" });
+
+  stats[0].users = await User.countDocuments();
+  stats[0].subscriptions = subscription.length;
+  stats[0].createdAt = new Data(Date.now());
+
+  await stats[0].save();
 });
