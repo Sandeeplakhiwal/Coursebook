@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -10,10 +10,18 @@ import {
 } from "@chakra-ui/react";
 
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loadUser, login } from "../../redux/actions/userAction.js";
 
 function Login() {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    dispatch(login(email, password));
+  };
+
   return (
     <Container h={"120vh"}>
       <VStack h={"full"} justifyContent="center" spacing={"16"}>
@@ -51,7 +59,12 @@ function Login() {
               </Button>
             </Link>
           </Box>
-          <Button my={4} colorScheme="yellow" type={"submit"}>
+          <Button
+            my={4}
+            colorScheme="yellow"
+            type={"submit"}
+            onClick={(e) => submitHandler(e)}
+          >
             Login
           </Button>
 

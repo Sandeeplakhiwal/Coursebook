@@ -23,23 +23,25 @@ import { Link } from "react-router-dom";
 import programmingImg from "../../assets/images/programming.jpg";
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import { fileUploadCss } from "../Auth/Register";
+import { useSelector } from "react-redux";
 
 function Profile() {
-  const user = {
-    name: "Sandeep Lakhiwal",
-    email: "sandeeplakhiwal98@gmail.com",
-    createdAt: String(new Date().toISOString()),
-    role: "user",
-    subscription: {
-      status: "active",
-    },
-    playlist: [
-      {
-        course: "safgsar",
-        poster: programmingImg,
-      },
-    ],
-  };
+  const { user } = useSelector((state) => state.user);
+  // const user = {
+  //   name: "Sandeep Lakhiwal",
+  //   email: "sandeeplakhiwal98@gmail.com",
+  //   createdAt: String(new Date().toISOString()),
+  //   role: "user",
+  //   subscription: {
+  //     status: "active",
+  //   },
+  //   playlist: [
+  //     {
+  //       course: "safgsar",
+  //       poster: programmingImg,
+  //     },
+  //   ],
+  // };
 
   const removeFromPlaylistHandler = (id) => {
     console.log(id);
@@ -65,7 +67,7 @@ function Profile() {
         padding="8"
       >
         <VStack>
-          <Avatar boxSize={"48"} />
+          <Avatar boxSize={"48"} src={user.avatar.url} />
           <Button onClick={onOpen} colorScheme={"yellow"} variant="ghost">
             Change Photo
           </Button>
@@ -87,7 +89,7 @@ function Profile() {
           {user.role !== "admin" && (
             <HStack>
               <Text children="Subscription" fontWeight={"bold"} />
-              {user.subscription.status === "active" ? (
+              {user.subscription && user.subscription.status === "active" ? (
                 <Button color={"yellow.500"} variant="unstyled">
                   Cancel Subscription
                 </Button>
@@ -111,7 +113,7 @@ function Profile() {
 
       <Heading children="Playlist" size={"md"} my="8" />
 
-      {user.playlist.length == 1 ? (
+      {user.playlist && user.playlist.length == 1 ? (
         <Stack
           direction={["column", "row"]}
           alignItems="center"

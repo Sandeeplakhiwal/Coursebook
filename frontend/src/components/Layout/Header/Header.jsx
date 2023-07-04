@@ -12,6 +12,8 @@ import {
 import React from "react";
 import { RiDashboardFill, RiLogoutBoxLine, RiMenu5Fill } from "react-icons/ri";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../../../redux/actions/userAction.js";
 
 const LinkButton = ({ url, title, onClose }) => {
   return (
@@ -21,14 +23,17 @@ const LinkButton = ({ url, title, onClose }) => {
   );
 };
 
-function Header() {
+function Header(isAuthenticated = false, user) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const isAuthenticated = true;
-  const user = { name: "Sandeep", role: "user" };
-  const logoutHandler = () => {
-    console.log("Logout");
+  const dispatch = useDispatch();
+  const logoutHandler = async () => {
     onClose();
+    dispatch(logout());
   };
+  let isUserAuthenticated = isAuthenticated.isAuthenticated;
+  let theUser = isAuthenticated.user;
+  console.log(isAuthenticated.isAuthenticated);
+  console.log(theUser);
   return (
     <>
       <Button
@@ -75,7 +80,7 @@ function Header() {
               bottom={"2rem"}
               width={"80%"}
             >
-              {isAuthenticated ? (
+              {isUserAuthenticated ? (
                 <>
                   <VStack>
                     <HStack>
@@ -84,14 +89,14 @@ function Header() {
                           Profile
                         </Button>
                       </Link>
-                      <Link to={"/login"} onClick={onClose}>
+                      <Link onClick={onClose}>
                         <Button variant={"ghost"} onClick={logoutHandler}>
                           <RiLogoutBoxLine />
                           Logout
                         </Button>
                       </Link>
                     </HStack>
-                    {user && user.role === "admin" && (
+                    {theUser && theUser.role === "admin" && (
                       <Link to={"/admin/dashboard"} onClick={onClose}>
                         <Button colorScheme={"purple"} variant="ghost">
                           <RiDashboardFill

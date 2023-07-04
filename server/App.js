@@ -2,6 +2,7 @@ import express from "express";
 import { config } from "dotenv";
 import ErrorMiddleware from "./Middlewares/Error.js";
 import cookieParser from "cookie-parser";
+import Cors from "cors";
 
 // Importing Routes
 import course from "./Routes/courseRoutes.js";
@@ -23,6 +24,13 @@ app.use(
   })
 );
 app.use(cookieParser());
+app.use(
+  Cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
 
 // Using Routes
 app.use("/api/v1", course);

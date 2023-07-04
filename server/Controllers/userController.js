@@ -22,8 +22,11 @@ export const register = catchAssyncError(async (req, res, next) => {
   }
   //   Upload file on cloudinary
   const file = req.file;
-  const fileURI = getDataUri(file);
-  const myCloud = await cloudinary.v2.uploader.upload(fileURI.content);
+  var myCloud = { public_id: "temp", secure_url: "temp" };
+  if (file) {
+    const fileURI = getDataUri(file);
+    myCloud = await cloudinary.v2.uploader.upload(fileURI.content);
+  }
   user = await User.create({
     name,
     email,
@@ -286,7 +289,7 @@ User.watch().on("change", async () => {
 
   stats[0].users = await User.countDocuments();
   stats[0].subscriptions = subscription.length;
-  stats[0].createdAt = new Data(Date.now());
+  stats[0].createdAt = new Date(Date.now());
 
   await stats[0].save();
 });
