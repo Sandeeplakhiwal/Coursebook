@@ -94,7 +94,7 @@ function Profile() {
                   Cancel Subscription
                 </Button>
               ) : (
-                <Link to={"/subscirbe"}>
+                <Link to={"/subscribe"}>
                   <Button colorScheme={"yellow"}>Subscribe</Button>
                 </Link>
               )}
