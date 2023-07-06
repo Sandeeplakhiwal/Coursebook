@@ -27,21 +27,6 @@ import { useSelector } from "react-redux";
 
 function Profile() {
   const { user } = useSelector((state) => state.user);
-  // const user = {
-  //   name: "Sandeep Lakhiwal",
-  //   email: "sandeeplakhiwal98@gmail.com",
-  //   createdAt: String(new Date().toISOString()),
-  //   role: "user",
-  //   subscription: {
-  //     status: "active",
-  //   },
-  //   playlist: [
-  //     {
-  //       course: "safgsar",
-  //       poster: programmingImg,
-  //     },
-  //   ],
-  // };
 
   const removeFromPlaylistHandler = (id) => {
     console.log(id);
