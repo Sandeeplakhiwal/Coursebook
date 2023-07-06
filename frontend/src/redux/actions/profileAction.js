@@ -13,16 +13,15 @@ export const updateProfile = (name, email) => async (dispatch) => {
         withCredentials: true,
       }
     );
-    console.log(data);
     dispatch({ type: "updateProfileSuccess", payload: data.message });
   } catch (error) {
-    console.log(error);
     dispatch({
       type: "updateProfileFailed",
       payload: error.response.data.message,
     });
   }
 };
+
 export const changePassword =
   (oldPassword, newPassword) => async (dispatch) => {
     try {
@@ -45,3 +44,21 @@ export const changePassword =
       });
     }
   };
+
+export const updateProfilePicture = (formdata) => async (dispatch) => {
+  try {
+    dispatch({ type: "updateProfilePictureRequest" });
+    const { data } = await axios.put(`/api/v1/updateprofilepic`, formdata, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      withCredentials: true,
+    });
+    dispatch({ type: "updateProfilePictureSuccess", payload: data.message });
+  } catch (error) {
+    dispatch({
+      type: "updateProfilePictureFailed",
+      payload: error.response.data.message,
+    });
+  }
+};

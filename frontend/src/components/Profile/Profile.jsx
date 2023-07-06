@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Button,
@@ -23,7 +23,9 @@ import { Link } from "react-router-dom";
 import programmingImg from "../../assets/images/programming.jpg";
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import { fileUploadCss } from "../Auth/Register";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { updateProfilePicture } from "../../redux/actions/profileAction.js";
+import toast from "react-hot-toast";
 
 function Profile() {
   const { user } = useSelector((state) => state.user);
@@ -32,10 +34,27 @@ function Profile() {
     console.log(id);
   };
 
+  const dispatch = useDispatch();
+
   const changeImageSubmitHandler = (e, image) => {
     e.preventDefault();
-    console.log(image);
+    var myForm = new FormData();
+    myForm.append("file", image);
+    dispatch(updateProfilePicture(myForm));
   };
+
+  const { loading, message, error } = useSelector((state) => state.profile);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch({ type: "clearError" });
+    }
+    if (message) {
+      toast.success(message);
+      dispatch({ type: "clearMessage" });
+    }
+  }, [message, error, dispatch]);
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
