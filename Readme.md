@@ -53,6 +53,10 @@ git clone https://github.com/Sandeeplakhiwal/coursebook.git
 - You can request a new course according to your preference
   ![RequestCourse](https://res.cloudinary.com/dkqp81ehr/image/upload/v1686394859/requestcoursescs_z4ptxc.jpg)
 
+- Dashboard specially designed for Admin that can access the stats of users, subscribes and views.
+  ![dashboardStats](https://github.com/Sandeeplakhiwal/Coursebook/assets/95290795/138d87ab-3b20-4ee8-98ca-6bc2a56f70d4)
+
+
 ## API Routes
 
 - `/api/v1/users`: User registration and authentication routes.
