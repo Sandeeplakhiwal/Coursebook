@@ -23,3 +23,25 @@ export const updateProfile = (name, email) => async (dispatch) => {
     });
   }
 };
+export const changePassword =
+  (oldPassword, newPassword) => async (dispatch) => {
+    try {
+      dispatch({ type: "changePasswordRequest" });
+      const { data } = await axios.put(
+        `/api/v1/changepassword`,
+        { oldPassword, newPassword },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      dispatch({ type: "changePasswordSuccess", payload: data.message });
+    } catch (error) {
+      dispatch({
+        type: "changePasswordFailed",
+        payload: error.response.data.message,
+      });
+    }
+  };
