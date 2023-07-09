@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "servermain",
   "version": "1.0.0",
   "description": "Backend for Coursebook",
   "main": "server.js",
