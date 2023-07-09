@@ -28,5 +28,8 @@
     "nodemailer": "^6.9.2",
     "razorpay": "^2.8.6",
     "validator": "^13.9.0"
+  },
+  "engines": {
+    "node": ">=18.14.1"
   }
 }

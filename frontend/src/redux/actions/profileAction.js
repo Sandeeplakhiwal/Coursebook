@@ -62,3 +62,46 @@ export const updateProfilePicture = (formdata) => async (dispatch) => {
     });
   }
 };
+
+export const forgotPassword = (email) => async (dispatch) => {
+  try {
+    dispatch({ type: "forgetPasswordRequest" });
+    const { data } = await axios.post(
+      `/api/v1/forgetpassword`,
+      { email },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+    dispatch({ type: "forgetPasswordSuccess", payload: data.message });
+  } catch (error) {
+    dispatch({
+      type: "forgetPasswordFailed",
+      payload: error.response.data.message,
+    });
+  }
+};
+// export const forgotPassword = (email) => async (dispatch) => {
+//   try {
+//     dispatch({ type: "forgetPasswordRequest" });
+//     const { data } = await axios.post(
+//       `/api/v1/forgetpassword`,
+//       { email },
+//       {
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         withCredentials: true,
+//       }
+//     );
+//     dispatch({ type: "forgetPasswordSuccess", payload: data.message });
+//   } catch (error) {
+//     dispatch({
+//       type: "forgetPasswordFailed",
+//       payload: error.response.data.message,
+//     });
+//   }
+// };
