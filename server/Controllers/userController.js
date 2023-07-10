@@ -9,6 +9,10 @@ import getDataUri from "../Utils/dataURI.js";
 import cloudinary from "cloudinary";
 import { Stats } from "../Models/Stats.js";
 
+export const RestP = async (req, res) => {
+  res.send("its working");
+};
+
 export const register = catchAssyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) {
@@ -61,6 +65,8 @@ export const logout = catchAssyncError(async (req, res, next) => {
     .cookie("token", null, {
       expires: new Date(Date.now()),
       httpOnly: true,
+      secure: true,
+      sameSite: "none",
     })
     .json({
       success: true,

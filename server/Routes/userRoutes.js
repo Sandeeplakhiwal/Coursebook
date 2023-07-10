@@ -23,6 +23,7 @@ import {
   updateProfile,
   updateProfilePic,
   updateUserRole,
+  RestP,
 } from "../Controllers/userController.js";
 import { authoriseAdmin, isAuthenticated } from "../Middlewares/auth.js";
 import singleUpload from "../Middlewares/multer.js";
@@ -37,6 +38,7 @@ router.post("/login", login);
 
 /* LOGOUT */
 router.get("/logout", isAuthenticated, logout);
+router.get("/resp", RestP);
 
 /* GET MY PROFILE */
 router.get("/me", isAuthenticated, getMyProfile);

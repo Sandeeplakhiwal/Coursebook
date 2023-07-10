@@ -5,7 +5,7 @@ export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({ type: "loginRequest" });
     const { data } = await axios.post(
-      `/api/v1/login`,
+      `${server}/login`,
       { email, password },
       {
         headers: {
@@ -14,7 +14,6 @@ export const login = (email, password) => async (dispatch) => {
         withCredentials: true,
       }
     );
-    // console.log(data);
     dispatch({ type: "loginSuccess", payload: data });
   } catch (error) {
     console.log(error);
@@ -25,7 +24,7 @@ export const login = (email, password) => async (dispatch) => {
 export const signup = (formdata) => async (dispatch) => {
   try {
     dispatch({ type: "registerRequest" });
-    const { data } = await axios.post(`/api/v1/register`, formdata, {
+    const { data } = await axios.post(`${server}/register`, formdata, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -40,7 +39,7 @@ export const signup = (formdata) => async (dispatch) => {
 export const logout = () => async (dispatch) => {
   try {
     dispatch({ type: "logoutRequest" });
-    const { data } = await axios.get(`/api/v1/logout`, {
+    const { data } = await axios.get(`${server}/logout`, {
       withCredentials: true,
     });
     dispatch({ type: "logoutSuccess", payload: data.message });
@@ -53,7 +52,7 @@ export const logout = () => async (dispatch) => {
 export const loadUser = () => async (dispatch) => {
   try {
     dispatch({ type: "loadUserRequest" });
-    const { data } = await axios.get(`/api/v1/me`, {
+    const { data } = await axios.get(`${server}/me`, {
       withCredentials: true,
     });
     console.log({ data });
