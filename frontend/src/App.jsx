@@ -123,7 +123,10 @@ function App() {
             <Route
               path="/forgotpassword"
               element={
-                <ProtectedRoute isAuthenticated={!isAuthenticated}>
+                <ProtectedRoute
+                  isAuthenticated={!isAuthenticated}
+                  redirect="/profile"
+                >
                   <ForgetPassword />
                 </ProtectedRoute>
               }
@@ -131,7 +134,10 @@ function App() {
             <Route
               path="/resetpassword/:token"
               element={
-                <ProtectedRoute isAuthenticated={!isAuthenticated}>
+                <ProtectedRoute
+                  isAuthenticated={!isAuthenticated}
+                  redirect="/profile"
+                >
                   <ResetPassword />
                 </ProtectedRoute>
               }
