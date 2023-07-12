@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import programmingImg from "../../assets/images/programming.jpg";
 import {
   Container,
@@ -11,6 +11,9 @@ import {
   VStack,
   Image,
 } from "@chakra-ui/react";
+
+import { useDispatch, useSelector } from "react-redux";
+import { getAllCourses } from "../../redux/actions/courseAction.js";
 
 import { Link } from "react-router-dom";
 
@@ -74,6 +77,13 @@ export function Course({
 function courses() {
   const [keyword, setKeyWord] = useState("");
   const [category, setCategory] = useState("");
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllCourses(category, keyword));
+  }, [category, keyword, dispatch]);
+
   const Categories = [
     "Web development",
     "Artificial Intelligence",
