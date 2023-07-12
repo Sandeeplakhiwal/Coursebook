@@ -11,10 +11,12 @@ export const createCourse = catchAssyncError(async (req, res, next) => {
   if (!title || !description || !category || !createdBy)
     return next(new ErrorHandler("Please fill all the fields!", 400));
   const file = req.file;
-  // console.log(file);
-  const fileUri = getDataUri(file);
-  // console.log(fileUri);
-  const mycloud = await cloudinary.v2.uploader.upload(fileUri.content);
+  var myCloud = { public_id: "temp", secure_url: "temp" };
+  if (file) {
+    const fileUri = getDataUri(file);
+    myCloud = await cloudinary.v2.uploader.upload(fileUri.content);
+  }
+  console.log(myCloud);
   await Course.create({
     title,
     description,
@@ -29,8 +31,8 @@ export const createCourse = catchAssyncError(async (req, res, next) => {
       },
     },
     poster: {
-      public_id: mycloud.public_id,
-      url: mycloud.secure_url,
+      public_id: myCloud.public_id,
+      url: myCloud.secure_url,
     },
   });
 

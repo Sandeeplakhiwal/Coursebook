@@ -32,8 +32,6 @@ function Header(isAuthenticated = false, user) {
   };
   let isUserAuthenticated = isAuthenticated.isAuthenticated;
   let theUser = isAuthenticated.user;
-  console.log(isAuthenticated.isAuthenticated);
-  console.log(theUser);
   return (
     <>
       <Button

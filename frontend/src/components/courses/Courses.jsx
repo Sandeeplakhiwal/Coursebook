@@ -16,6 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllCourses } from "../../redux/actions/courseAction.js";
 
 import { Link } from "react-router-dom";
+import { addToPlaylist } from "../../redux/actions/userAction";
+import { toast } from "react-hot-toast";
 
 export function Course({
   views,
@@ -80,9 +82,25 @@ function courses() {
 
   const dispatch = useDispatch();
 
+  const addToPlaylistHandler = (courseId) => {
+    console.log("Added to playlist.", courseId);
+    dispatch(addToPlaylist(courseId));
+  };
+
+  const { courses, message, error } = useSelector((state) => state.course);
+
   useEffect(() => {
     dispatch(getAllCourses(category, keyword));
-  }, [category, keyword, dispatch]);
+
+    if (error) {
+      toast.error(error);
+      dispatch({ type: "clearError" });
+    }
+    if (message) {
+      toast.success(message);
+      dispatch({ type: "clearMessage" });
+    }
+  }, [category, keyword, dispatch, message, error]);
 
   const Categories = [
     "Web development",
@@ -92,10 +110,6 @@ function courses() {
     "Data Science",
     "Game Development",
   ];
-
-  const addToPlaylistHandler = () => {
-    console.log("Added to playlist.");
-  };
 
   return (
     <Container minH={"95vh"} maxW="container.lg" paddingY={"8"}>
@@ -127,16 +141,22 @@ function courses() {
         justifyContent={["flex-start", "space-evenly"]}
         alignItems={["center", "flex-start"]}
       >
-        <Course
-          title={"Sample"}
-          description={"Sample"}
-          imageSrc={programmingImg}
-          views={400}
-          id={"Sample"}
-          creator={"Sample boy"}
-          lectureCount={2}
-          addToPlaylistHandler={addToPlaylistHandler}
-        />
+        {courses &&
+          courses.map((item, index) => {
+            return (
+              <Course
+                key={index}
+                title={item.title}
+                description={item.description}
+                imageSrc={item.poster.url}
+                views={item.views}
+                id={item._id}
+                creator={item.createdBy}
+                lectureCount={item.lecture ? item.lecture.length : 0}
+                addToPlaylistHandler={addToPlaylistHandler}
+              />
+            );
+          })}
       </Stack>
     </Container>
   );

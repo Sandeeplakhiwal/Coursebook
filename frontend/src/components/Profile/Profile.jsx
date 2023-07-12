@@ -26,12 +26,14 @@ import { fileUploadCss } from "../Auth/Register";
 import { useSelector, useDispatch } from "react-redux";
 import { updateProfilePicture } from "../../redux/actions/profileAction.js";
 import toast from "react-hot-toast";
+import { removeFromPlaylist } from "../../redux/actions/userAction";
 
 function Profile() {
   const { user } = useSelector((state) => state.user);
 
   const removeFromPlaylistHandler = (id) => {
     console.log(id);
+    dispatch(removeFromPlaylist(id));
   };
 
   const dispatch = useDispatch();
@@ -117,7 +119,7 @@ function Profile() {
 
       <Heading children="Playlist" size={"md"} my="8" />
 
-      {user.playlist && user.playlist.length == 1 ? (
+      {user.playlist && user.playlist.length > 0 ? (
         <Stack
           direction={["column", "row"]}
           alignItems="center"
