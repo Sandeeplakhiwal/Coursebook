@@ -8,9 +8,11 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { RiCheckboxCircleFill } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 
 function PaymentSuccess() {
+  const queryParams = new URLSearchParams(window.location.search);
+  const term = queryParams.get("referance");
   return (
     <Container p="16">
       <Heading my={"8"} textAlign children="You have a Pro Pack" />
@@ -38,7 +40,7 @@ function PaymentSuccess() {
           <Button variant={"ghost"}>Go to profile</Button>
         </Link>
 
-        <Heading size={"xs"}>Reference: sdfasffgndfjangak</Heading>
+        <Heading size={"xs"}>Reference: {term}</Heading>
       </VStack>
     </Container>
   );

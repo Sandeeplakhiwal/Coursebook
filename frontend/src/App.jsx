@@ -150,7 +150,7 @@ function App() {
                   isAuthenticated={isAuthenticated}
                   redirect="/login"
                 >
-                  <Subscribe />
+                  <Subscribe user={user} />
                 </ProtectedRoute>
               }
             />

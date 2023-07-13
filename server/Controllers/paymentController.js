@@ -52,6 +52,7 @@ export const paymentVarification = catchAssyncError(async (req, res, next) => {
     razorpay_subscription_id,
   });
   user.subscription.status = "active";
+  await user.save();
   res.redirect(
     `${process.env.FRONTEND_URL}/paymentsuccess?referance=${razorpay_payment_id}`
   );

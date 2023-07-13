@@ -100,3 +100,18 @@ export const removeFromPlaylist = (id) => async (dispatch) => {
     });
   }
 };
+
+export const buySubscription = () => async (dispatch) => {
+  try {
+    dispatch({ type: "buySubscriptionRequest" });
+    const { data } = await axios.get(`${server}/subscribe`, {
+      withCredentials: true,
+    });
+    dispatch({ type: "buySubscriptionSuccess", payload: data.subscriptionId });
+  } catch (error) {
+    dispatch({
+      type: "buySubscriptionFailed",
+      payload: error.response.data.message,
+    });
+  }
+};
