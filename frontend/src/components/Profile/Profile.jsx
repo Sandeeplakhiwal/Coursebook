@@ -26,7 +26,10 @@ import { fileUploadCss } from "../Auth/Register";
 import { useSelector, useDispatch } from "react-redux";
 import { updateProfilePicture } from "../../redux/actions/profileAction.js";
 import toast from "react-hot-toast";
-import { removeFromPlaylist } from "../../redux/actions/userAction";
+import {
+  cancelSubscription,
+  removeFromPlaylist,
+} from "../../redux/actions/userAction";
 
 function Profile() {
   const { user } = useSelector((state) => state.user);
@@ -45,7 +48,16 @@ function Profile() {
     dispatch(updateProfilePicture(myForm));
   };
 
+  const cancelSubscriptionHandler = () => {
+    dispatch(cancelSubscription());
+  };
+
   const { loading, message, error } = useSelector((state) => state.profile);
+  const {
+    loading: subscriptionLoading,
+    message: subscriptionMessage,
+    error: subscriptionError,
+  } = useSelector((state) => state.subscription);
 
   useEffect(() => {
     if (error) {
@@ -54,6 +66,14 @@ function Profile() {
     }
     if (message) {
       toast.success(message);
+      dispatch({ type: "clearMessage" });
+    }
+    if (subscriptionError) {
+      toast.error(subscriptionError);
+      dispatch({ type: "clearError" });
+    }
+    if (subscriptionMessage) {
+      toast.success(subscriptionMessage);
       dispatch({ type: "clearMessage" });
     }
   }, [message, error, dispatch]);
@@ -96,7 +116,12 @@ function Profile() {
             <HStack>
               <Text children="Subscription" fontWeight={"bold"} />
               {user.subscription && user.subscription.status === "active" ? (
-                <Button color={"yellow.500"} variant="unstyled">
+                <Button
+                  onClick={() => cancelSubscriptionHandler()}
+                  color={"yellow.500"}
+                  variant="unstyled"
+                  isLoading={subscriptionLoading}
+                >
                   Cancel Subscription
                 </Button>
               ) : (

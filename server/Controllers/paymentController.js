@@ -12,8 +12,8 @@ export const buySubscription = catchAssyncError(async (req, res, next) => {
 
   const plan_id = process.env.PLAN_ID || plan_M13U5mvU5Tvyz1;
   let instance = new Razorpay({
-    key_id: "rzp_test_yEE4dn9CBr9UI8",
-    key_secret: "jZPUoDxYoa9lTAN4x9STwZtp",
+    key_id: process.env.RAZORPAY_API_KEY_ID,
+    key_secret: process.env.RAZORPAY_API_SECRET,
   });
   const subscription = await instance.subscriptions.create({
     plan_id,
@@ -61,14 +61,14 @@ export const paymentVarification = catchAssyncError(async (req, res, next) => {
 export const gerRazorpayKey = catchAssyncError(async (req, res, next) => {
   res.status(200).json({
     success: true,
-    key: "rzp_test_yEE4dn9CBr9UI8",
+    key: process.env.RAZORPAY_API_KEY_ID,
   });
 });
 
 export const cancelSubscription = catchAssyncError(async (req, res, next) => {
   let instance = new Razorpay({
-    key_id: "rzp_test_yEE4dn9CBr9UI8",
-    key_secret: "jZPUoDxYoa9lTAN4x9STwZtp",
+    key_id: process.env.RAZORPAY_API_KEY_ID,
+    key_secret: process.env.RAZORPAY_API_SECRET,
   });
   const user = await User.findById(req.user._id);
   const subscriptionId = user.subscription.id;
@@ -85,7 +85,7 @@ export const cancelSubscription = catchAssyncError(async (req, res, next) => {
   //   refund = true;
   // }
 
-  await payment.remove();
+  await payment.deleteOne();
   user.subscription.id = undefined;
   user.subscription.status = undefined;
   await user.save();
