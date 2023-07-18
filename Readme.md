@@ -2,6 +2,10 @@
 
 This is a Online Study App built using MERN stack (MongoDB, Express, React.js, Node.js). It allows users to register, choose course, watch playlist videos, request a new course, contact us.
 
+
+![Vite + React - Personal - Microsoft_ Edge 2023-07-18 19-40-29_1](https://github.com/Sandeeplakhiwal/Coursebook/assets/95290795/3e6b4559-f19a-4a3b-a946-e7cba1dd9cc8)
+
+
 ## Table of contents
 
 - [Installation](#installation)
