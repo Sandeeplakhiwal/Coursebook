@@ -1,11 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Grid, Heading, Text, VStack } from "@chakra-ui/react";
 import introVideo from "../../assets/videos/introVideo2.mp4";
+import { Navigate, useParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { getCourseLectures } from "../../redux/actions/courseAction.js";
+import toast from "react-hot-toast";
 
-function CoursePage() {
-  const lectureTitle = "Lecture title";
+function CoursePage({ user }) {
   const [lectureNumber, setLectureNumber] = useState(0);
-  const lectures = [
+
+  const params = useParams();
+  const dispatch = useDispatch();
+
+  var { lectures: courseLectures } = useSelector((state) => state.course);
+
+  useEffect(() => {
+    dispatch(getCourseLectures(params.id));
+  }, [dispatch, params.id]);
+
+  console.log(courseLectures);
+
+  var lectures = [
     {
       _id: "sagedafgetr",
       title: "sample1",
@@ -15,7 +30,7 @@ function CoursePage() {
       },
     },
     {
-      _id: "sagedafgetr",
+      _id: "sagedafgets",
       title: "sample2",
       description: "nothing jst putting a little description.",
       video: {
@@ -23,20 +38,32 @@ function CoursePage() {
       },
     },
     {
-      _id: "sagedafgetr",
+      _id: "sagedafgett",
       title: "sample3",
-      description: "nothing jst putting a little description.",
+      description: "nothing jst putting a larger description.",
       video: {
         url: "sagerag",
       },
     },
   ];
+
+  if (
+    user.role !== "admin" &&
+    (user.subscription === undefined || user.subscription.status !== "active")
+  ) {
+    return <Navigate to={"/subscribe"} />;
+  }
+
+  if (courseLectures.length >= 1) {
+    lectures = courseLectures;
+  }
+
   return (
     <Grid minH={"90vh"} templateColumns={["1fr", "3fr 1fr"]}>
       <Box>
         <video
           width={"100%"}
-          src={introVideo}
+          src={lectures[lectureNumber].video.url}
           controls
           controlsList="nodownload noremoteplayback"
           disablePictureInPicture

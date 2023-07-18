@@ -50,7 +50,6 @@ function App() {
       toast.success(message);
       dispatch({ type: "clearMessage" });
     }
-    // dispatch(loadUser());
   }, [message, error, dispatch]);
 
   useEffect(() => {
@@ -59,15 +58,26 @@ function App() {
 
   return (
     <Router>
+      <Header isAuthenticated={isAuthenticated} user={user} />
+
       {loading ? (
         <Loader />
       ) : (
         <>
-          <Header isAuthenticated={isAuthenticated} user={user} />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/courses" element={<Courses />} />
-            <Route path="/course/:id" element={<CoursePage />} />
+            <Route path="/courses" element={<Courses user={user} />} />
+            <Route
+              path="/course/:id"
+              element={
+                <ProtectedRoute
+                  isAuthenticated={isAuthenticated}
+                  redirect="/login"
+                >
+                  <CoursePage user={user} />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/contact" element={<Contact />} />
             <Route path="/request" element={<Request />} />
             <Route path="/about" element={<About />} />

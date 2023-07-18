@@ -28,7 +28,16 @@ export function Course({
   creator,
   description,
   lectureCount,
+  user,
 }) {
+  var navToPage = `/course/${id}`;
+  // if (
+  //   user &&
+  //   user.role === "user" &&
+  //   (user.subscription === undefined || user.subscription.status !== "active")
+  // ) {
+  //   navToPage = `/subscribe`;
+  // }
   return (
     <VStack className="course" alignItems={["center", "flex-start"]}>
       <Image src={imageSrc} boxSize="60" objectFit={"cover"} />
@@ -61,7 +70,7 @@ export function Course({
         textTransform={"uppercase"}
       />
       <Stack direction={["column", "row"]} alignItems="center">
-        <Link to={`/course/${id}`}>
+        <Link to={navToPage}>
           <Button colorScheme={"yellow"}>Watch Now</Button>
         </Link>
         <Button
@@ -76,7 +85,7 @@ export function Course({
   );
 }
 
-function courses() {
+function courses(user) {
   const [keyword, setKeyWord] = useState("");
   const [category, setCategory] = useState("");
 
@@ -87,20 +96,11 @@ function courses() {
     dispatch(addToPlaylist(courseId));
   };
 
-  const { courses, message, error } = useSelector((state) => state.course);
+  const { courses } = useSelector((state) => state.course);
 
   useEffect(() => {
     dispatch(getAllCourses(category, keyword));
-
-    if (error) {
-      toast.error(error);
-      dispatch({ type: "clearError" });
-    }
-    if (message) {
-      toast.success(message);
-      dispatch({ type: "clearMessage" });
-    }
-  }, [category, keyword, dispatch, message, error]);
+  }, [category, keyword, dispatch]);
 
   const Categories = [
     "Web development",
@@ -154,6 +154,7 @@ function courses() {
                 creator={item.createdBy}
                 lectureCount={item.lecture ? item.lecture.length : 0}
                 addToPlaylistHandler={addToPlaylistHandler}
+                user={user}
               />
             );
           })}

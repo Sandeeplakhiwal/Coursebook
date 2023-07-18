@@ -15,13 +15,13 @@ import { toast } from "react-hot-toast";
 import logo from "../../assets/images/barber-shop.png";
 
 function Subscribe({ user }) {
-  console.log(user);
   const dispatch = useDispatch();
   const [key, setKey] = useState("");
 
   const { loading, subscriptionId, error } = useSelector(
     (state) => state.subscription
   );
+  const { error: lectureError } = useSelector((state) => state.course);
 
   const subscribeHandler = async () => {
     const { data } = await axios.get(`${server}/razorpaykey`);
@@ -30,8 +30,8 @@ function Subscribe({ user }) {
   };
 
   useEffect(() => {
-    if (error) {
-      toast.error(error);
+    if (error || lectureError) {
+      toast.error(error || lectureError);
       dispatch({ type: "clearError" });
     }
     if (subscriptionId) {
@@ -60,7 +60,7 @@ function Subscribe({ user }) {
       };
       openPopUp();
     }
-  }, [dispatch, error, user.name, user.email, subscriptionId]);
+  }, [dispatch, error, user.name, user.email, subscriptionId, lectureError]);
 
   return (
     <Container h={"90vh"} p="16">
