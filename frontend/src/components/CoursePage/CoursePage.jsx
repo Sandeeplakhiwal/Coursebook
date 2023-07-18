@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Grid, Heading, Text, VStack } from "@chakra-ui/react";
-import introVideo from "../../assets/videos/introVideo2.mp4";
+import introVideo from "../../assets/videos/introVideo.mp4";
 import { Navigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getCourseLectures } from "../../redux/actions/courseAction.js";
@@ -26,7 +26,7 @@ function CoursePage({ user }) {
       title: "sample1",
       description: "nothing jst putting a little description.",
       video: {
-        url: "sagerag",
+        url: { introVideo },
       },
     },
     {
@@ -34,15 +34,7 @@ function CoursePage({ user }) {
       title: "sample2",
       description: "nothing jst putting a little description.",
       video: {
-        url: "sagerag",
-      },
-    },
-    {
-      _id: "sagedafgett",
-      title: "sample3",
-      description: "nothing jst putting a larger description.",
-      video: {
-        url: "sagerag",
+        url: { introVideo },
       },
     },
   ];

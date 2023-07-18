@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 
 import { Link } from "react-router-dom";
-import introVideo from "../../assets/videos/introVideo2.mp4";
+import introVideo from "../../assets/videos/introVideo.mp4";
 import { RiSecurePaymentFill } from "react-icons/ri";
 import termsAndConditions from "../../assets/docs/termsAndCondition";
 
@@ -96,7 +96,7 @@ function About() {
           only for premium users.
         </Text>
 
-        <Link to={"/subscirbe"}>
+        <Link to={"/subscribe"}>
           <Button variant={"ghost"} colorScheme="yellow">
             Checkout Our Plan
           </Button>
