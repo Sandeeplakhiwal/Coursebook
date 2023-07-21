@@ -16,14 +16,29 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { RiDeleteBin7Fill } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteCourseLecture } from "../../../redux/actions/adminAction";
+import {
+  getAllCourses,
+  getCourseLectures,
+} from "../../../redux/actions/courseAction";
 import Sidebar from "../Sidebar";
 import CourseModel from "./CourseModel";
 
 function AdminCourses() {
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const courses = [
+  var { courses: adminCourses, lectures } = useSelector(
+    (state) => state.course
+  );
+
+  const [courseId, setCourseId] = useState("");
+  const [courseTitle, setCourseTitle] = useState("");
+
+  const dispatch = useDispatch();
+
+  var courses = [
     {
       _id: "eawrt",
       poster: {
@@ -37,16 +52,26 @@ function AdminCourses() {
     },
   ];
 
-  const courseDetailsHandler = (userId) => {
-    console.log(userId, "updated");
+  if (adminCourses.length >= 1) {
+    courses = adminCourses;
+  }
+
+  useEffect(() => {
+    dispatch(getAllCourses());
+  }, [dispatch]);
+
+  const courseDetailsHandler = (courseId, courseTitle) => {
+    setCourseId(courseId);
+    setCourseTitle(courseTitle);
+    dispatch(getCourseLectures(courseId));
     onOpen();
   };
   const deleteButtonHandler = (userId) => {
     console.log(userId, "deleted");
   };
   const deleteLectureButtonHandler = (courseId, lectureId) => {
-    console.log(courseId);
-    console.log(lectureId);
+    console.log(courseId, lectureId);
+    dispatch(deleteCourseLecture(courseId, lectureId));
   };
   const addLectureHandler = (e, courseId, title, description, video) => {
     e.preventDefault();
@@ -65,7 +90,7 @@ function AdminCourses() {
           textTransform={"uppercase"}
           my="16"
           textAlign={["center", "left"]}
-          children="All Users"
+          children="All Courses"
         />
         <TableContainer w={["100vw", "full"]}>
           <Table variant={"simple"} size="lg">
@@ -97,10 +122,11 @@ function AdminCourses() {
         <CourseModel
           isOpen={isOpen}
           onClose={onClose}
-          id={"courseId"}
-          courseTitle={"React crash course"}
+          id={courseId}
+          courseTitle={courseTitle}
           deleteButtonHandler={deleteLectureButtonHandler}
           addLectureHandler={addLectureHandler}
+          lectures={lectures}
         />
       </Box>
       <Sidebar />
@@ -123,7 +149,7 @@ function Row({ item, courseDetailsHandler, deleteButtonHandler }) {
       <Td isNumeric>
         <HStack justifyContent={"flex-end"}>
           <Button
-            onClick={() => courseDetailsHandler(item._id)}
+            onClick={() => courseDetailsHandler(item._id, item.title)}
             variant={"outline"}
             color="purple.500"
           >

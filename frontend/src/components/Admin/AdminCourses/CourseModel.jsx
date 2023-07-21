@@ -15,9 +15,11 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RiDeleteBin7Fill } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
 import { fileUploadCss } from "../../Auth/Register";
+import { toast } from "react-hot-toast";
 
 function CourseModel({
   isOpen,
@@ -32,6 +34,20 @@ function CourseModel({
   const [description, setDescription] = useState("");
   const [video, setVideo] = useState("");
   const [videoPrev, setVideoPrev] = useState("");
+  const dispatch = useDispatch();
+  const { loading, error, message } = useSelector((state) => state.admin);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch({ type: "clearError" });
+    }
+    if (message) {
+      toast.success(message);
+      dispatch({ type: "clearMessage" });
+    }
+  }, [error, message, dispatch]);
+
   const changeVideoHandler = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -48,6 +64,7 @@ function CourseModel({
     setVideoPrev("");
     onClose();
   };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -70,14 +87,13 @@ function CourseModel({
               {lectures.map((item, index) => (
                 <VideoCard
                   key={index}
-                  title={"React Crash Course"}
-                  description={
-                    "Intro lecture for absolute begginers where you will learn the basics."
-                  }
-                  num={item + 1}
-                  lectureId="sgdashd"
-                  courseId={"agdfgag"}
+                  title={item.title}
+                  description={item.description}
+                  num={index + 1}
+                  lectureId={item._id}
+                  courseId={id}
                   deleteButtonHandler={deleteButtonHandler}
+                  loading={loading}
                 />
               ))}
             </Box>
@@ -150,6 +166,7 @@ function VideoCard({
   lectureId,
   courseId,
   deleteButtonHandler,
+  loading,
 }) {
   return (
     <Stack
@@ -165,6 +182,7 @@ function VideoCard({
         <Text>{description}</Text>
       </Box>
       <Button
+        isLoading={loading}
         color={"purple.600"}
         onClick={() => deleteButtonHandler(courseId, lectureId)}
       >
