@@ -19,7 +19,10 @@ import {
 import React, { useEffect, useState } from "react";
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteCourseLecture } from "../../../redux/actions/adminAction";
+import {
+  addLecture,
+  deleteCourseLecture,
+} from "../../../redux/actions/adminAction";
 import {
   getAllCourses,
   getCourseLectures,
@@ -75,6 +78,11 @@ function AdminCourses() {
   };
   const addLectureHandler = (e, courseId, title, description, video) => {
     e.preventDefault();
+    var myForm = new FormData();
+    myForm.append("title", title);
+    myForm.append("description", description);
+    myForm.append("file", video);
+    dispatch(addLecture(courseId, myForm));
   };
 
   return (

@@ -49,3 +49,29 @@ export const deleteCourseLecture =
       });
     }
   };
+
+export const addLecture = (id, formdata) => async (dispatch) => {
+  // title, description, file, id
+  try {
+    dispatch({ type: "addLectureRequest" });
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      withCredentials: true,
+    };
+    const { data } = await axios.post(
+      `${server}/course/${id}`,
+      formdata,
+      config
+    );
+
+    dispatch({ type: "addLectureSuccess", payload: data.message });
+  } catch (error) {
+    console.log(error.response.data.message);
+    dispatch({
+      type: "addLectureFailed",
+      payload: error.response.data.message,
+    });
+  }
+};
