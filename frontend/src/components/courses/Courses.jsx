@@ -31,13 +31,7 @@ export function Course({
   user,
 }) {
   var navToPage = `/course/${id}`;
-  // if (
-  //   user &&
-  //   user.role === "user" &&
-  //   (user.subscription === undefined || user.subscription.status !== "active")
-  // ) {
-  //   navToPage = `/subscribe`;
-  // }
+
   return (
     <VStack className="course" alignItems={["center", "flex-start"]}>
       <Image src={imageSrc} boxSize="60" objectFit={"cover"} />
@@ -96,7 +90,18 @@ function courses(user) {
     dispatch(addToPlaylist(courseId));
   };
 
-  const { courses } = useSelector((state) => state.course);
+  const { courses, message, error } = useSelector((state) => state.course);
+
+  useEffect(() => {
+    if (message) {
+      toast.success(message);
+      dispatch({ type: "clearMessage" });
+    }
+    if (error) {
+      toast.error(error);
+      dispatch({ type: "clearError" });
+    }
+  }, [message, error, dispatch]);
 
   useEffect(() => {
     dispatch(getAllCourses(category, keyword));
@@ -152,7 +157,7 @@ function courses(user) {
                 views={item.views}
                 id={item._id}
                 creator={item.createdBy}
-                lectureCount={item.lecture ? item.lecture.length : 0}
+                lectureCount={item.lectures ? item.lectures.length : 0}
                 addToPlaylistHandler={addToPlaylistHandler}
                 user={user}
               />
