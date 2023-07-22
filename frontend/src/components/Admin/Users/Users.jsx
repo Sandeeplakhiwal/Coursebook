@@ -14,16 +14,23 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import Sidebar from "../Sidebar";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  deleteUser,
+  getAllUsers,
+  updateRole,
+} from "../../../redux/actions/adminAction";
+import { toast } from "react-hot-toast";
 
 function Users() {
-  const users = [
+  var users = [
     {
       _id: "eawrt",
-      name: "Sandeep",
-      email: "sandeeplakhiwal98@gmail.com",
+      name: "Sample",
+      email: "Sample@gmail.com",
       role: "admin",
       subscription: {
         status: "active",
@@ -31,26 +38,8 @@ function Users() {
     },
     {
       _id: "evwrt",
-      name: "Arpit",
-      email: "sandeeplakhiwal98@gmail.com",
-      role: "user",
-      subscription: {
-        status: "active",
-      },
-    },
-    {
-      _id: "ebwrt",
-      name: "Shanku",
-      email: "sandeeplakhiwal98@gmail.com",
-      role: "user",
-      subscription: {
-        status: "active",
-      },
-    },
-    {
-      _id: "ecwrt",
-      name: "Vikas",
-      email: "sandeeplakhiwal98@gmail.com",
+      name: "Sample",
+      email: "sample2@gmail.com",
       role: "user",
       subscription: {
         status: "active",
@@ -60,10 +49,41 @@ function Users() {
 
   const updateHandler = (userId) => {
     console.log(userId, "updated");
+    dispatch(updateRole(userId));
   };
   const deleteButtonHandler = (userId) => {
     console.log(userId, "deleted");
+    dispatch(deleteUser(userId));
   };
+
+  const dispatch = useDispatch();
+  var { usersData, message, error, loading } = useSelector(
+    (state) => state.admin
+  );
+
+  useEffect(() => {
+    if (message) {
+      toast.success(message);
+      dispatch({ type: "clearMessage" });
+    }
+    if (error) {
+      toast.error(error);
+      dispatch({ type: "clearError" });
+    }
+  }, [dispatch, message, error]);
+
+  useEffect(() => {
+    dispatch(getAllUsers());
+  }, [dispatch]);
+
+  if (usersData && usersData.numberOfUsers >= 1) {
+    console.log(usersData);
+    users = usersData.users;
+  }
+
+  if (usersData && usersData.numberOfUsers === 0) {
+    toast.error("No Users Yet!");
+  }
 
   return (
     <Grid
@@ -100,6 +120,7 @@ function Users() {
                   item={item}
                   updateHandler={updateHandler}
                   deleteButtonHandler={deleteButtonHandler}
+                  loading={loading}
                 />
               ))}
             </Tbody>
@@ -113,20 +134,26 @@ function Users() {
 
 export default Users;
 
-function Row({ item, updateHandler, deleteButtonHandler }) {
+function Row({ item, updateHandler, deleteButtonHandler, loading }) {
   return (
     <Tr>
       <Td>#{item._id}</Td>
       <Td>{item.name}</Td>
       <Td>{item.email}</Td>
       <Td>{item.role}</Td>
-      <Td>{item.subscription.status === "active" ? "Active" : "Not Active"}</Td>
+      <Td>
+        {item.subscription !== undefined &&
+        item.subscription.status === "active"
+          ? "Active"
+          : "Not Active"}
+      </Td>
       <Td isNumeric>
         <HStack justifyContent={"flex-end"}>
           <Button
             onClick={() => updateHandler(item._id)}
             variant={"outline"}
             color="purple.500"
+            isLoading={loading}
           >
             Change Role
           </Button>

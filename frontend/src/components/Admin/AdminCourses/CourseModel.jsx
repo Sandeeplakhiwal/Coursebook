@@ -141,7 +141,12 @@ function CourseModel({
                       src={videoPrev}
                     ></video>
                   )}
-                  <Button w={"full"} colorScheme={"purple"} type="submit">
+                  <Button
+                    isLoading={loading}
+                    w={"full"}
+                    colorScheme={"purple"}
+                    type="submit"
+                  >
                     Upload
                   </Button>
                 </VStack>
