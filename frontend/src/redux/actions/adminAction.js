@@ -134,3 +134,19 @@ export const deleteUser = (id) => async (dispatch) => {
     });
   }
 };
+
+export const getDashboardStats = () => async (dispatch) => {
+  try {
+    dispatch({ type: "getAdminStatsRequest" });
+    const { data } = await axios.get(`${server}/admin/stats`, {
+      withCredentials: true,
+    });
+    dispatch({ type: "getAdminStatsSuccess", payload: data });
+  } catch (error) {
+    console.log("error:", error.response.data.message);
+    dispatch({
+      type: "getAdminStatsFailed",
+      payload: error.response.data.message,
+    });
+  }
+};

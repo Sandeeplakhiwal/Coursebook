@@ -47,9 +47,9 @@ function AdminCourses() {
       poster: {
         url: "https://cdn.pixabay.com/photo/2016/11/19/15/32/laptop-1839876_1280.jpg",
       },
-      title: "Mern Stack Course",
+      title: "Sample Course",
       category: "Coding",
-      createdBy: "Sandeep Lakhiwal",
+      createdBy: "John Bieber",
       views: 900,
       numOfVideos: 10,
     },

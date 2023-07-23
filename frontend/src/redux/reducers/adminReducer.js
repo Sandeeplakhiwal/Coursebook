@@ -3,6 +3,26 @@ import { createReducer } from "@reduxjs/toolkit";
 export const adminReducer = createReducer(
   { message: null },
   {
+    getAdminStatsRequest: (state) => {
+      state.loading = true;
+    },
+    getAdminStatsSuccess: (state, action) => {
+      state.loading = false;
+      state.stats = action.payload.stats;
+      state.usersCount = action.payload.usersCount;
+      state.subscriptionCount = action.payload.subscriptionCount;
+      state.viewsCount = action.payload.viewsCount;
+      state.usersPercentage = action.payload.usersPercentage;
+      state.subscriptionPercentage = action.payload.subscriptionPercentage;
+      state.viewsPercentage = action.payload.viewsPercentage;
+      state.usersProfit = action.payload.usersProfit;
+      state.subscriptionProfit = action.payload.subscriptionProfit;
+      state.viewsProfit = action.payload.viewsProfit;
+    },
+    getAdminStatsFailed: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
     createCourseRequest: (state) => {
       state.loading = true;
     },
