@@ -13,11 +13,6 @@ cloundiary.v2.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// export let instance = new Razorpay({
-//   key_id: process.env.RAZORPAY_API_KEY_ID,
-//   key_secret: process.env.RAZORPAY_API_SECRET,
-// });
-
 nodeCron.schedule("0 0 1 * *", async () => {
   try {
     await Stats.create({});
@@ -25,16 +20,6 @@ nodeCron.schedule("0 0 1 * *", async () => {
     console.log(error);
   }
 });
-
-// let temp = async () => {
-//   try {
-//     await Stats.create({});
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// temp();
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is listening on PORT: ${process.env.PORT}`);
