@@ -15,9 +15,28 @@ export const contact = (name, email, message) => async (dispatch) => {
       { name, email, message },
       config
     );
-    console.log(data);
     dispatch({ type: "contactSuccess", payload: data.message });
   } catch (error) {
     dispatch({ type: "contactFailed", payload: error.response.data.message });
+  }
+};
+
+export const requestNewCourse = (name, email, course) => async (dispatch) => {
+  try {
+    dispatch({ type: "newCourseRequest" });
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    };
+    const { data } = await axios.post(
+      `${server}/courserequest`,
+      { name, email, course },
+      config
+    );
+    dispatch({ type: "newCourseSuccess", payload: data.message });
+  } catch (error) {
+    dispatch({ type: "newCourseFailed", payload: error.response.data.message });
   }
 };
