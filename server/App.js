@@ -24,6 +24,13 @@ app.use(
   })
 );
 app.use(cookieParser());
+app.use((req, res, next) => {
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://coursebook-sigma.vercel.app"
+  );
+  next();
+});
 app.use(
   Cors({
     origin: process.env.FRONTEND_URL,
@@ -39,7 +46,9 @@ app.use("/api/v1", payment);
 app.use("/api/v1", other);
 
 app.get("/", (req, res) => {
-  res.send("Coursebook official server.");
+  res.send(
+    "<h1>Coursebook official server, click <a href='https://coursebook-sigma.vercel.app'>here</a> to visit.</h1>"
+  );
 });
 
 export default app;
