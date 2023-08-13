@@ -12,7 +12,6 @@ import { buySubscription } from "../../redux/actions/userAction";
 import axios from "axios";
 import { server } from "../../redux/store.js";
 import { toast } from "react-hot-toast";
-import logo from "../../assets/images/barber-shop.png";
 
 function Subscribe({ user }) {
   const dispatch = useDispatch();
@@ -40,7 +39,6 @@ function Subscribe({ user }) {
           key,
           name: "Coursebook",
           description: "Get Acccess To All Premium Content",
-          image: logo,
           subscription_id: subscriptionId,
           callback_url: `${server}/paymentvarification`,
           prefill: {
