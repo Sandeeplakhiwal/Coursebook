@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loadUser, login } from "../../redux/actions/userAction.js";
 
 function Login() {
@@ -22,6 +22,8 @@ function Login() {
     e.preventDefault();
     dispatch(login(email, password));
   };
+
+  const { loading } = useSelector((state) => state.user);
 
   return (
     <Container h={"120vh"}>
@@ -65,6 +67,7 @@ function Login() {
             colorScheme="yellow"
             type={"submit"}
             onClick={(e) => submitHandler(e)}
+            isLoading={loading}
           >
             Login
           </Button>

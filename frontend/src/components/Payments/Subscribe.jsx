@@ -61,7 +61,7 @@ function Subscribe({ user }) {
   }, [dispatch, error, user.name, user.email, subscriptionId, lectureError]);
 
   return (
-    <Container h={"90vh"} p="16">
+    <Container minH={"90vh"} p="16" mb={8}>
       <Heading children="Welcome" my={"8"} textAlign="center" />
       <VStack
         boxShadow={"lg"}

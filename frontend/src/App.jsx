@@ -56,6 +56,10 @@ function App() {
     dispatch(loadUser());
   }, [dispatch]);
 
+  useEffect(() => {
+    document.title = "Coursebook";
+  }, []);
+
   return (
     <Router>
       <Header isAuthenticated={isAuthenticated} user={user} />

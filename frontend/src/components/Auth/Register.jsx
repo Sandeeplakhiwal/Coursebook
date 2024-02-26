@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { signup } from "../../redux/actions/userAction.js";
 
 export const fileUploadCss = {
@@ -58,6 +58,8 @@ function Register() {
     console.log("myForm", myForm);
     dispatch(signup(myForm));
   };
+
+  const { loading } = useSelector((state) => state.user);
 
   return (
     <Container h={"150vh"}>
@@ -114,7 +116,12 @@ function Register() {
               onChange={changeImageHandler}
             />
           </Box>
-          <Button type={"submit"} colorScheme="yellow" my={4}>
+          <Button
+            type={"submit"}
+            colorScheme="yellow"
+            my={4}
+            isLoading={loading}
+          >
             SignUp
           </Button>
           <Box my={4}>

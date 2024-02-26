@@ -34,12 +34,12 @@ import {
 function Profile() {
   const { user } = useSelector((state) => state.user);
 
+  const dispatch = useDispatch();
+
   const removeFromPlaylistHandler = (id) => {
     console.log(id);
     dispatch(removeFromPlaylist(id));
   };
-
-  const dispatch = useDispatch();
 
   const changeImageSubmitHandler = (e, image) => {
     e.preventDefault();
@@ -93,7 +93,10 @@ function Profile() {
         padding="8"
       >
         <VStack>
-          <Avatar boxSize={"48"} src={user.avatar.url} />
+          <Avatar
+            boxSize={"48"}
+            src={user && user.avatar ? user.avatar.url : "/images/default.png"}
+          />
           <Button onClick={onOpen} colorScheme={"yellow"} variant="ghost">
             Change Photo
           </Button>
@@ -101,21 +104,23 @@ function Profile() {
         <VStack spacing={"4"} alignItems={["center", "flex-start"]}>
           <HStack>
             <Text noOfLines={1} children="Name" fontWeight={"bold"} />
-            <Text children={user.name} />
+            <Text children={user && user.name} />
           </HStack>
           <HStack>
             <Text children="Email" fontWeight={"bold"} />
-            <Text children={user.email} />
+            <Text children={user && user.email} />
           </HStack>
           <HStack>
             <Text children="CreatedAt" fontWeight={"bold"} />
-            <Text children={user.createdAt.split("T")[0]} />
+            <Text children={user && user.createdAt.split("T")[0]} />
           </HStack>
 
-          {user.role !== "admin" && (
+          {user && user.role !== "admin" && (
             <HStack>
               <Text children="Subscription" fontWeight={"bold"} />
-              {user.subscription && user.subscription.status === "active" ? (
+              {user &&
+              user.subscription &&
+              user.subscription.status === "active" ? (
                 <Button
                   onClick={() => cancelSubscriptionHandler()}
                   color={"yellow.500"}
@@ -144,34 +149,35 @@ function Profile() {
 
       <Heading children="Playlist" size={"md"} my="8" />
 
-      {user.playlist && user.playlist.length > 0 ? (
+      {user && user.playlist && user.playlist.length > 0 ? (
         <Stack
           direction={["column", "row"]}
           alignItems="center"
           flexWrap={"wrap"}
           p="4"
         >
-          {user.playlist.map((element, index) => {
-            return (
-              <VStack w={"48"} m="2" key={element.course}>
-                <Image
-                  boxSize={"full"}
-                  objectFit="contain"
-                  src={element.poster}
-                />
-                <HStack>
-                  <Link to={`/course/${element.course}`}>
-                    <Button colorScheme="yellow">Watch Now</Button>
-                  </Link>
-                  <Button
-                    onClick={() => removeFromPlaylistHandler(element.course)}
-                  >
-                    <RiDeleteBin7Fill />
-                  </Button>
-                </HStack>
-              </VStack>
-            );
-          })}
+          {user &&
+            user.playlist.map((element, index) => {
+              return (
+                <VStack w={"48"} m="2" key={element.course}>
+                  <Image
+                    boxSize={"full"}
+                    objectFit="contain"
+                    src={element.poster}
+                  />
+                  <HStack>
+                    <Link to={`/course/${element.course}`}>
+                      <Button colorScheme="yellow">Watch Now</Button>
+                    </Link>
+                    <Button
+                      onClick={() => removeFromPlaylistHandler(element.course)}
+                    >
+                      <RiDeleteBin7Fill />
+                    </Button>
+                  </HStack>
+                </VStack>
+              );
+            })}
         </Stack>
       ) : (
         <Heading
